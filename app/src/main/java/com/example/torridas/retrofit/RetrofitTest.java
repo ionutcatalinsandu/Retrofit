@@ -2,6 +2,8 @@ package com.example.torridas.retrofit;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -37,6 +39,10 @@ public class RetrofitTest extends AppCompatActivity {
         editText = (EditText) findViewById(R.id.input);
         progressDialog = new ProgressDialog(RetrofitTest.this);
 
+        NetworkBroadCastReciever networkBroadCastReciever = new NetworkBroadCastReciever();
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        this.registerReceiver(networkBroadCastReciever, filter);
+
 
         buttonSearch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,7 +60,7 @@ public class RetrofitTest extends AppCompatActivity {
                 Retrofit retrofit = new Retrofit.Builder().baseUrl(Strings.GitHub_BASE_URL)
                         .addConverterFactory(GsonConverterFactory.create()).build();
 
-                GitHubAPI gitHubAPI = retrofit.create(GitHubAPI.class);
+                GitHubAPI gitHubAPI = retrofit.create(GitHubAPI.class); // muta-l
                 Call<ManyResults> call = gitHubAPI.getMeRepos(query);
                 call.enqueue(new Callback<ManyResults>() {
                     @Override
